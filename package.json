@@ -1,0 +1,18 @@
+{
+  "name": "gamahiringcoders-fakeairbnb",
+  "version": "1.0.0",
+  "description": "Fake Airbnb project developed for hiring coders assigment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": {
+    "name": "Willian Nunes Parente",
+    "email": "willianparente@hotmail.com"
+  },
+  "license": "MIT"
+}
