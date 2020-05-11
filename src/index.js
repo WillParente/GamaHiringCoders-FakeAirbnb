@@ -18,15 +18,14 @@ function setPageNumber(pageNumber) {
     renderCards(data, pageNumber);
 }
 
-function deleteChild() { 
-    var e = document.getElementById("row");
-    
-    var child = e.lastElementChild;  
-    while (child) { 
-        e.removeChild(child); 
-        child = e.lastElementChild; 
-    } 
-} 
+function deleteChild(elementID) {
+    var e = document.getElementById(elementID);
+    var child = e.lastElementChild;
+    while (child) {
+        e.removeChild(child);
+        child = e.lastElementChild;
+    }
+}
 
 function renderPage(pageNumber) {
     const api_url = "https://api.sheety.co/30b6e400-9023-4a15-8e6c-16aa4e3b1e72";
@@ -37,6 +36,7 @@ function renderPage(pageNumber) {
             data = addElements(data);
             data = filterLocation(data);
             data = pagination(data);
+            data = totalCost(data);
             if (!pageNumber) {
                 renderCards(data, 1);
             } else {
@@ -49,32 +49,69 @@ function renderPage(pageNumber) {
 function addElements(data) {
     for (let i = 0; i < data.length; i++) {
         data[i]['id'] = i;
+        let country;
+        let city;
+        if (i % 3 == 0) {
+            country = 'Brazil';
+            city = 'São Paulo';
+        }
+        else if (i % 3 == 1) {
+            country = 'Estados Unidos';
+            city = 'Nova York';
+        }
+        else {
+            country = 'Canada'
+            city = 'Toronto';
+        }
+
         data[i]['latitude'] = -23.6480311;
         data[i]['longitude'] = -46.6380964, 16;
-        data[i]['country'] = 'Brazil',
-            data[i]['city'] = 'São Paulo'
+        data[i]['country'] = country;
+        data[i]['city'] = city;
+    }
+    return data;
+}
+
+
+function totalCost(data) {
+    let startDate = new Date(document.getElementById("startDate").value);
+    let endDate = new Date(document.getElementById("endDate").value);
+    if (startDate && endDate) {
+        if (endDate <= startDate) {
+            alert("Data fim deve ser maior que data inicio");
+        } else {
+            const Difference_In_Time = Math.abs(endDate - startDate);
+            const Difference_In_Days = Math.ceil(Difference_In_Time / (1000 * 3600 * 24));
+            for (let i = 0; i < data.length; i++) {
+                data[i]['totalPrice'] = data[i].price * Difference_In_Days;
+            }
+        }
     }
     return data;
 }
 
 function filterLocation(data) {
-    const locationFilter = document.getElementById("location");
-    if (!locationFilter)
-        return data;
+    const locationFilter = document.getElementById("location").value;
+    var filtered;
+    if (!locationFilter) {
+        filtered = data;
+    }
     else {
-        return data.filter(function (location) {
-            return location = locationFilter;
+        filtered = data.filter(function (property) {
+            return property.city === locationFilter;
         });
     }
+    return filtered;
 }
 
 function pagination(data) {
+    deleteChild("pagination");
     const totalItensPerPage = 9;
     const totalPages = Math.floor(data.length / totalItensPerPage) + 1
     for (let i = 0; i < data.length; i++) {
         data[i]['page'] = Math.floor((i / totalItensPerPage) + 1);
     }
-    for (let j = 1; j < totalPages; j++) {
+    for (let j = 0; j < totalPages; j++) {
         ul = document.getElementById("pagination");
         li = document.createElement("li");
         li.className = "page-item";
@@ -89,10 +126,9 @@ function pagination(data) {
 }
 
 function renderCards(data, pageNumber) {
-    deleteChild();
+    deleteChild("row");
     data.map(propety => {
-        const { photo, property_type, name, price, id, latitude, longitude, country, city, page } = propety;
-        console.log("name: " + name + " - page: " + page + "- pagenumber: " + pageNumber);
+        const { photo, property_type, name, price, id, latitude, longitude, country, city, page, totalPrice } = propety;
         if (page == pageNumber) {
             //
             row = document.getElementById("row");
@@ -127,8 +163,11 @@ function renderCards(data, pageNumber) {
             //
             propertyPrice = document.createElement("p");
             propertyPrice.className = "property-price";
-            propertyPrice.innerHTML = `R$: ${price},00`;
-
+            if (!totalPrice) {
+                propertyPrice.innerHTML = `Diária: R$: ${price},00`;
+            } else {
+                propertyPrice.innerHTML = `Diária: R$: ${price},00 - Total: R$: ${totalPrice},00`;
+            }
             //
             row.appendChild(div);
             div.appendChild(card);

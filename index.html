@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <!--Import CSS-->
-    <link rel="stylesheet" href="../src/styles.css">
+    <link rel="stylesheet" href="./src/styles.css">
 
     <!--Bootstrap CSS 4.4.1-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -46,11 +46,11 @@
                         </div>
                         <div class="text-center">
                             <label for="startDate">Data Início</label>
-                            <input class="form-control mr-sm-4" type="date" min='2020-05-10' id="startDate">
+                            <input class="form-control mr-sm-4" type="date" min='2020-05-10' max='2021-12-31' id="startDate">
                         </div>
                         <div class="text-center">
                             <label for="endDate">Data Fim</label>
-                            <input class="form-control mr-sm-2" type="date" min='2020-05-10' id="endDate">
+                            <input class="form-control mr-sm-2" type="date" min='2020-05-10' max='2021-12-31' id="endDate">
                         </div>
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
@@ -89,7 +89,7 @@
         crossorigin="anonymous"></script>
 
     <!-- Import js codes-->
-    <script src="../src/index.js"></script>
+    <script src="./src/index.js"></script>
 
 </body>
 
